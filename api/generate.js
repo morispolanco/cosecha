@@ -41,7 +41,7 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'perplexity/sonar-pro', 
+        model: 'google/gemini-2.0-flash-lite-preview-02-05:free', 
         messages: [{ role: 'user', content: prompt }],
         response_format: { type: 'json_object' }
       }),
