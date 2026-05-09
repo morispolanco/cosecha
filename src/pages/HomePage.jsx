@@ -42,12 +42,17 @@ const HomePage = () => {
       });
       
       setReport(fullReport);
-      setShowInterstitial(true);
-
+      // setShowInterstitial(true); // Temporarily disabled to prevent crash
+      
+      setLoading(false);
+      
       // Auto-scroll to results
       setTimeout(() => {
-        document.getElementById('results')?.scrollIntoView({ behavior: 'smooth' });
-      }, 500);
+        const resultsEl = document.getElementById('results');
+        if (resultsEl) {
+          resultsEl.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 300);
 
     } catch (err) {
       console.error(err);
