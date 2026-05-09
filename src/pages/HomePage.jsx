@@ -11,16 +11,17 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false);
   const [climateData, setClimateData] = useState(null);
   const [report, setReport] = useState(null);
+  const [error, setError] = useState(null);
   
   // Ad states
   const [showRewarded, setShowRewarded] = useState(false);
   const [showInterstitial, setShowInterstitial] = useState(false);
-  const [pendingReport, setPendingReport] = useState(false);
 
   const handleAnalyze = async () => {
     setLoading(true);
     setClimateData(null);
     setReport(null);
+    setError(null);
     
     try {
       const climate = await getClimateAnalysis(coords);
@@ -28,16 +29,19 @@ const HomePage = () => {
       setLoading(false);
     } catch (error) {
       console.error(error);
+      setError("No se pudo conectar con el servicio meteorológico. Inténtalo de nuevo.");
       setLoading(false);
     }
   };
 
   const handleRequestReport = () => {
+    setError(null);
     setShowRewarded(true);
   };
 
   const onAdComplete = async () => {
     setLoading(true);
+    setError(null);
     try {
       const fullReport = await generateAgriculturalReport({
         location: coords,
@@ -54,8 +58,14 @@ const HomePage = () => {
       });
       setReport(fullReport);
       setShowInterstitial(true);
-    } catch (error) {
-      console.error(error);
+      
+      // Auto-scroll to results after a short delay
+      setTimeout(() => {
+        document.getElementById('results')?.scrollIntoView({ behavior: 'smooth' });
+      }, 500);
+    } catch (err) {
+      console.error(err);
+      setError("Error al generar el análisis inteligente. Por favor, verifica tu conexión o intenta con otra ubicación.");
     } finally {
       setLoading(false);
     }
@@ -63,6 +73,16 @@ const HomePage = () => {
 
   return (
     <div className="space-y-12">
+      {/* Error Alert */}
+      {error && (
+        <div className="max-w-4xl mx-auto bg-red-50 border-l-4 border-red-500 p-4 rounded-r-xl animate-in fade-in slide-in-from-top duration-300">
+          <div className="flex items-center gap-3">
+            <ShieldAlert className="w-6 h-6 text-red-500" />
+            <p className="text-red-700 font-medium">{error}</p>
+          </div>
+        </div>
+      )}
+
       {/* Hero Section */}
       <section className="text-center max-w-4xl mx-auto">
         <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
