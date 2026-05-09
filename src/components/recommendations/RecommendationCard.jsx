@@ -23,14 +23,21 @@ const RecommendationCard = ({ title, items, icon: Icon, color = 'primary' }) => 
       </div>
 
       <ul className="space-y-3">
-        {Array.isArray(items) ? items.map((item, index) => (
-          <li key={index} className={`flex items-start gap-3 p-3 rounded-lg border ${colorClasses}`}>
-            <div className={`w-1.5 h-1.5 rounded-full mt-2 shrink-0 ${color === 'primary' ? 'bg-primary-500' : color === 'red' ? 'bg-red-500' : 'bg-amber-500'}`}></div>
-            <span className="text-sm font-semibold">{item}</span>
-          </li>
-        )) : (
+        {Array.isArray(items) ? items.map((item, index) => {
+          // Extract text if item is an object
+          let displayItem = item;
+          if (typeof item === 'object' && item !== null) {
+            displayItem = item.name || item.crop || item.title || item.risk || JSON.stringify(item);
+          }
+          return (
+            <li key={index} className={`flex items-start gap-3 p-3 rounded-lg border ${colorClasses}`}>
+              <div className={`w-1.5 h-1.5 rounded-full mt-2 shrink-0 ${color === 'primary' ? 'bg-primary-500' : color === 'red' ? 'bg-red-500' : 'bg-amber-500'}`}></div>
+              <span className="text-sm font-semibold">{String(displayItem)}</span>
+            </li>
+          );
+        }) : (
           <li className={`p-3 rounded-lg border ${colorClasses} text-sm`}>
-            {String(items)}
+            {typeof items === 'object' ? JSON.stringify(items) : String(items)}
           </li>
         )}
       </ul>
