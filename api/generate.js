@@ -41,7 +41,7 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'anthropic/claude-3.5-sonnet', 
+        model: 'qwen/qwen-2.5-72b-instruct', 
         messages: [{ role: 'user', content: prompt }],
         response_format: { type: 'json_object' }
       }),
