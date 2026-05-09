@@ -18,13 +18,15 @@ export default async function handler(req, res) {
 
     Genera un informe técnico agrícola detallado en formato JSON que incluya:
     1. "recommended_crops": Lista de 3-5 cultivos ideales (ej: maíz, frijol, café, cardamomo, aguacate, etc.).
-    2. "analysis": Explicación de por qué estos cultivos son aptos para estas condiciones específicas.
-    3. "planting_calendar": Calendario sugerido (meses de siembra y cosecha).
-    4. "soil_nutrients": Nutrientes que probablemente necesita el suelo según la región.
-    5. "fertilization_strategy": Recomendaciones de fertilizantes.
-    6. "climate_risks": Riesgos climáticos específicos (inundación, sequía, heladas).
-    7. "management_tips": Consejos prácticos para maximizar la productividad.
-    8. "summary": Un resumen simple para el agricultor.
+    2. "analysis": Explicación técnica de por qué estos cultivos son aptos para estas condiciones.
+    3. "planting_calendar": Guía paso a paso sobre cuándo empezar la siembra, meses críticos y fechas estimadas de cosecha.
+    4. "soil_nutrients": Lista detallada de nutrientes (nitrógeno, fósforo, potasio y micronutrientes) necesarios.
+    5. "fertilization_strategy": Estrategia de fertilización (tipos de fertilizantes, dosis y frecuencia).
+    6. "pest_and_disease": Recomendaciones de pesticidas, fungicidas y métodos de control preventivo para plagas comunes en la zona.
+    7. "irrigation_management": Necesidades de agua y consejos de riego basados en la precipitación regional.
+    8. "climate_risks": Riesgos climáticos específicos y cómo mitigarlos (inundación, sequía, heladas).
+    9. "management_tips": Consejos prácticos para maximizar la productividad y calidad del producto.
+    10. "summary": Un resumen simple y motivador para el agricultor.
 
     Responde ÚNICAMENTE con el objeto JSON puro, sin bloques de código markdown.
   `;
