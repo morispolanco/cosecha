@@ -9,7 +9,8 @@ export const generateAgriculturalReport = async (data) => {
     });
 
     if (!response.ok) {
-      throw new Error('Error al generar el reporte');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || 'Error al generar el reporte');
     }
 
     return await response.json();
@@ -30,7 +31,8 @@ export const getClimateAnalysis = async (coords) => {
     });
 
     if (!response.ok) {
-      throw new Error('Error al obtener datos climáticos');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || 'Error al obtener datos climáticos');
     }
 
     return await response.json();

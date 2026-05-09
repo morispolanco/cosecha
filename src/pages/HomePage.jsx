@@ -51,7 +51,7 @@ const HomePage = () => {
 
     } catch (err) {
       console.error(err);
-      setError("Error al procesar el análisis agrícola. Por favor, intenta de nuevo o selecciona otra ubicación.");
+      setError(`Error: ${err.message}. Por favor, verifica tu configuración de API en Vercel o intenta de nuevo.`);
     } finally {
       setLoading(false);
     }
