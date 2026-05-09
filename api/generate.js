@@ -49,13 +49,23 @@ export default async function handler(req, res) {
     
     if (data.error) {
       console.error('OpenRouter Error:', data.error);
-      return res.status(500).json({ error: 'Error de la IA' });
+      return res.status(500).json({ error: 'Error de la IA: ' + data.error.message });
     }
 
-    const result = JSON.parse(data.choices[0].message.content);
-    res.status(200).json(result);
+    let content = data.choices[0].message.content;
+    
+    // Clean markdown code blocks if present
+    content = content.replace(/```json/g, '').replace(/```/g, '').trim();
+
+    try {
+      const result = JSON.parse(content);
+      res.status(200).json(result);
+    } catch (parseError) {
+      console.error('JSON Parse Error:', parseError, 'Content:', content);
+      res.status(500).json({ error: 'Error al procesar la respuesta de la IA' });
+    }
   } catch (error) {
     console.error('API Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 }
