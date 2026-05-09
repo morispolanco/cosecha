@@ -3,7 +3,6 @@ import GuatemalaMap from '../components/map/GuatemalaMap';
 import { getClimateAnalysis, generateAgriculturalReport } from '../services/aiService';
 import { Thermometer, Droplets, Mountain, CloudRain, ShieldAlert, Loader2, Sprout, ArrowRight } from 'lucide-react';
 import RecommendationCard from '../components/recommendations/RecommendationCard';
-import RewardedAd from '../components/ads/RewardedAd';
 import InterstitialAd from '../components/ads/InterstitialAd';
 
 const HomePage = () => {
@@ -14,58 +13,45 @@ const HomePage = () => {
   const [error, setError] = useState(null);
   
   // Ad states
-  const [showRewarded, setShowRewarded] = useState(false);
   const [showInterstitial, setShowInterstitial] = useState(false);
 
-  const handleAnalyze = async () => {
+  const handleFullAnalysis = async () => {
     setLoading(true);
     setClimateData(null);
     setReport(null);
     setError(null);
     
     try {
+      // 1. Get Climate Data
       const climate = await getClimateAnalysis(coords);
       setClimateData(climate);
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-      setError("No se pudo conectar con el servicio meteorológico. Inténtalo de nuevo.");
-      setLoading(false);
-    }
-  };
 
-  const handleRequestReport = () => {
-    setError(null);
-    setShowRewarded(true);
-  };
-
-  const onAdComplete = async () => {
-    setLoading(true);
-    setError(null);
-    try {
+      // 2. Generate AI Report Immediately
       const fullReport = await generateAgriculturalReport({
         location: coords,
         climate: {
-          temp: climateData.temp,
-          humidity: climateData.humidity,
-          precipitation: climateData.precipitation
+          temp: climate.temp,
+          humidity: climate.humidity,
+          precipitation: climate.precipitation
         },
-        altitude: climateData.altitude,
+        altitude: climate.altitude,
         terrainData: {
-          soilType: climateData.soilType,
-          risks: climateData.risks
+          soilType: climate.soilType,
+          risks: climate.risks
         }
       });
+      
       setReport(fullReport);
       setShowInterstitial(true);
-      
-      // Auto-scroll to results after a short delay
+
+      // Auto-scroll to results
       setTimeout(() => {
         document.getElementById('results')?.scrollIntoView({ behavior: 'smooth' });
       }, 500);
+
     } catch (err) {
       console.error(err);
-      setError("Error al generar el análisis inteligente. Por favor, verifica tu conexión o intenta con otra ubicación.");
+      setError("Error al procesar el análisis agrícola. Por favor, intenta de nuevo o selecciona otra ubicación.");
     } finally {
       setLoading(false);
     }
@@ -107,14 +93,14 @@ const HomePage = () => {
           <GuatemalaMap onPositionChange={setCoords} />
           <div className="p-6 bg-white">
             <button 
-              onClick={handleAnalyze}
+              onClick={handleFullAnalysis}
               disabled={loading}
               className="btn-primary w-full py-4 text-lg"
             >
               {loading ? (
-                <><Loader2 className="w-6 h-6 animate-spin" /> Analizando Terreno...</>
+                <><Loader2 className="w-6 h-6 animate-spin" /> Generando Análisis Inteligente...</>
               ) : (
-                <>Comenzar Análisis Técnico <ArrowRight className="w-5 h-5" /></>
+                <>Realizar Análisis Completo con IA <ArrowRight className="w-5 h-5" /></>
               )}
             </button>
           </div>
@@ -134,34 +120,15 @@ const HomePage = () => {
                   <ClimateStat icon={Droplets} label="Humedad" value={`${climateData.humidity}%`} />
                   <ClimateStat icon={CloudRain} label="Precipitación" value={`${climateData.precipitation} mm`} />
                 </div>
-                
-                <div className="mt-8 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                   <p className="text-xs text-slate-500 uppercase font-bold mb-2">Región Agrícola</p>
-                   <p className="font-bold text-slate-800">{climateData.region}</p>
-                </div>
               </div>
 
-              <div className="card bg-gradient-to-br from-primary-600 to-primary-800 text-white border-none">
-                <div className="flex items-start gap-4 mb-6">
-                  <div className="bg-white/20 p-3 rounded-xl backdrop-blur-md">
-                    <Sprout className="w-8 h-8 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold">Recomendación IA</h3>
-                    <p className="text-primary-100 text-sm">Basado en algoritmos de aprendizaje agrícola</p>
-                  </div>
-                </div>
-                
-                <p className="text-primary-50 mb-8 leading-relaxed">
-                  Hemos procesado los datos de tu ubicación. Para obtener una recomendación de cultivos detallada, calendario de siembra y análisis de nutrientes, genera el informe completo.
-                </p>
-                
-                <button 
-                  onClick={handleRequestReport}
-                  className="w-full bg-white text-primary-900 font-bold py-3 px-6 rounded-xl hover:bg-primary-50 transition-colors shadow-lg flex items-center justify-center gap-2"
-                >
-                  Generar Informe Inteligente
-                </button>
+              <div className="card bg-earth-600 text-white border-none">
+                 <h4 className="font-bold mb-2">Análisis de Suelo Estimado</h4>
+                 <p className="text-earth-50 text-sm mb-4">Región: {climateData.region}</p>
+                 <div className="bg-white/10 p-3 rounded-lg">
+                    <p className="text-xs font-bold uppercase opacity-70">Tipo de Suelo</p>
+                    <p className="font-semibold">{climateData.soilType}</p>
+                 </div>
               </div>
             </div>
           ) : (
@@ -171,7 +138,7 @@ const HomePage = () => {
                </div>
                <h3 className="font-bold text-slate-800 mb-2">Esperando Ubicación</h3>
                <p className="text-slate-500 text-sm">
-                 Haz clic en cualquier punto del mapa de Guatemala para comenzar el análisis de productividad de tu tierra.
+                 Haz clic en cualquier punto del mapa para generar un análisis completo de productividad.
                </p>
             </div>
           )}
@@ -230,13 +197,6 @@ const HomePage = () => {
         </section>
       )}
 
-      {/* Modals */}
-      <RewardedAd 
-        isOpen={showRewarded} 
-        onClose={() => setShowRewarded(false)} 
-        onReward={onAdComplete} 
-        title="Análisis Agrícola Profundo"
-      />
       <InterstitialAd 
         isOpen={showInterstitial} 
         onClose={() => setShowInterstitial(false)} 
