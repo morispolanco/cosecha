@@ -180,21 +180,21 @@ const HomePage = () => {
                        <CloudRain className="w-4 h-4 text-primary-600" />
                        Calendario de Siembra
                     </h4>
-                    <p className="text-sm text-slate-600 leading-relaxed">{report.planting_calendar}</p>
+                    <p className="text-sm text-slate-600 leading-relaxed">{report?.planting_calendar || "No disponible"}</p>
                  </div>
                  <div className="card">
                     <h4 className="font-bold text-slate-800 mb-4 border-b pb-2 flex items-center gap-2">
                        <Sprout className="w-4 h-4 text-primary-600" />
                        Nutrientes Necesarios
                     </h4>
-                    <p className="text-sm text-slate-600 leading-relaxed">{report.soil_nutrients}</p>
+                    <p className="text-sm text-slate-600 leading-relaxed">{report?.soil_nutrients || "No disponible"}</p>
                  </div>
                  <div className="card">
                     <h4 className="font-bold text-slate-800 mb-4 border-b pb-2 flex items-center gap-2">
                        <Droplets className="w-4 h-4 text-primary-600" />
                        Manejo de Riego
                     </h4>
-                    <p className="text-sm text-slate-600 leading-relaxed">{report.irrigation_management}</p>
+                    <p className="text-sm text-slate-600 leading-relaxed">{report?.irrigation_management || "No disponible"}</p>
                  </div>
               </div>
 
@@ -205,7 +205,7 @@ const HomePage = () => {
                        Control de Plagas y Pesticidas
                     </h4>
                     <p className="text-sm text-slate-600 leading-relaxed bg-amber-50/50 p-4 rounded-lg border border-amber-100">
-                       {report.pest_and_disease}
+                       {report?.pest_and_disease || "Información en proceso..."}
                     </p>
                  </div>
                  <div className="card border-l-4 border-l-primary-500">
@@ -214,7 +214,7 @@ const HomePage = () => {
                        Estrategia de Fertilización
                     </h4>
                     <p className="text-sm text-slate-600 leading-relaxed bg-primary-50/50 p-4 rounded-lg border border-primary-100">
-                       {report.fertilization_strategy}
+                       {report?.fertilization_strategy || "Información en proceso..."}
                     </p>
                  </div>
               </div>
@@ -224,14 +224,16 @@ const HomePage = () => {
                    <Info className="w-6 h-6 text-primary-600" />
                    Consejos de Manejo y Productividad
                  </h3>
-                 <p className="text-slate-700 leading-relaxed bg-slate-50 p-6 rounded-xl border border-slate-100">
-                   {report.management_tips}
-                 </p>
+                 <div className="text-slate-700 leading-relaxed bg-slate-50 p-6 rounded-xl border border-slate-100 text-sm">
+                   {report?.management_tips || "Optimización de terreno en curso..."}
+                 </div>
               </div>
 
               <div className="card bg-slate-900 text-white border-none p-10 text-center shadow-xl">
                  <h3 className="text-2xl font-bold mb-4">Resumen para el Productor</h3>
-                 <p className="text-slate-300 italic text-lg leading-relaxed">"{report.summary}"</p>
+                 <p className="text-slate-300 italic text-lg leading-relaxed">
+                   "{report?.summary || "Generando recomendaciones finales..."}"
+                 </p>
               </div>
            </div>
         </section>
